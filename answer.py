@@ -10,8 +10,8 @@ PRICE_PER_KM = 0.061
 MAX_TIME_PER_TRUCK = 10
 
 
-def distance(x1, x2, y1, y2):
-    return math.sqrt(abs(x1 - x2) + abs(y1 - y2))
+def distance(x1, y1, x2, y2):
+    return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
 
 
 # class Graph:
@@ -41,31 +41,38 @@ class Truck:
         self.current_order = 1
         Truck.id += 1
 
-    def has_capacity(self):
-        return self.capacity_left > 0
-
     def can_deliver_order(self, order):
         """
         Checks whether the truck can deliver the order and reach the depot in
         time.
         """
-        time_to_reach_order = distance(self.x, self.y, order.x, order.y)
-        if self.current_time + time_to_reach_order > order.end_time:
+        if self.capacity_left == 0:
+            return False
+
+        time_to_reach_order = distance(self.x, self.y, order.x, order.y) / DRIVE_SPEED_KMPH
+
+        if self.current_time + time_to_reach_order >= order.end_time:
             return False
 
         time_to_reach_depot = distance(order.x, order.y, 0, 0) / DRIVE_SPEED_KMPH
-        if (self.current_time + time_to_reach_order
-                + time_to_reach_depot > MAX_TIME_PER_TRUCK):
+
+        if (
+            max(self.current_time + time_to_reach_order, order.start_time)
+                + time_to_reach_depot > MAX_TIME_PER_TRUCK
+        ):
             return False
 
+        print("True")
         return True
 
     def deliver_order(self, order):
         dist = distance(self.x, self.y, order.x, order.y)
-        # self.distance_travelled += dist
 
         # update current_time
-        self.current_time += max(dist / DRIVE_SPEED_KMPH, order.start_time)
+        self.current_time = max(
+            self.current_time + (dist / DRIVE_SPEED_KMPH),
+            order.start_time
+        )
 
         # update capacity
         self.capacity_left -= 1
@@ -94,7 +101,7 @@ def bruteforce(orders):
 
     while orders:
         top = orders.pop()
-        if current_truck.has_capacity() and current_truck.can_deliver_order(top):
+        if current_truck.can_deliver_order(top):
             current_truck.deliver_order(top)
         else:
             deliveries.extend(current_truck.deliveries[::])
@@ -125,6 +132,7 @@ def answer():
 
     with open("answer.txt", 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
+        writer.writerow(["truck_id", "order_id", "sequence_number"])
         for row in ans_list:
             # writer.writerow("%d, %d, %d" % (t_id, o_id, s_no))
             writer.writerow(row)
