@@ -3,6 +3,7 @@ import math
 import pandas as pd
 from sklearn.cluster import KMeans
 import numpy as np
+import sys
 
 
 MAX_DELIVERIES = 10
@@ -11,7 +12,7 @@ PRICE_PER_TRUCK = 100
 PRICE_PER_KM = 0.061
 MAX_TIME_PER_TRUCK = 10
 
-TOTAL_CLUSTERS = 40
+TOTAL_CLUSTERS = 51
 
 
 def distance(x1, y1, x2, y2):
@@ -145,8 +146,6 @@ def answer():
     kmeans = KMeans(n_clusters=TOTAL_CLUSTERS, random_state=0)
     kmeans.fit(orders_to_cluster)
 
-    print(len(orders))
-
     # ans_list = bruteforce(orders)
     ans_list = clustered(orders, kmeans)
 
@@ -157,6 +156,10 @@ def answer():
         writer.writerow(["truck_id", "order_id", "sequence_number"])
         for row in ans_list:
             writer.writerow(row)
+
+
+if len(sys.argv) > 1:
+    TOTAL_CLUSTERS = int(sys.argv[1])
 
 
 answer()
