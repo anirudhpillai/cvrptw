@@ -5,14 +5,13 @@ from sklearn.cluster import KMeans
 import numpy as np
 
 
-
 MAX_DELIVERIES = 10
 DRIVE_SPEED_KMPH = 20
 PRICE_PER_TRUCK = 100
 PRICE_PER_KM = 0.061
 MAX_TIME_PER_TRUCK = 10
 
-TOTAL_CLUSTERS = 70
+TOTAL_CLUSTERS = 40
 
 
 def distance(x1, y1, x2, y2):
@@ -114,8 +113,9 @@ def clustered(orders, kmeans):
         curr_len = len(deliveries)
         current_truck = Truck()
 
-        for idx in cluster:
-            order = orders[idx]
+        orders_in_cluster = [orders[idx] for idx in cluster]
+
+        for order in sorted(orders_in_cluster, key=lambda x: x.end_time):
             if current_truck.can_deliver_order(order):
                 current_truck.deliver_order(order)
             else:
