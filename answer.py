@@ -30,6 +30,7 @@ class Truck:
         self.id = Truck.id
         self.deliveries = []  # [truck_id, order_id, seq_no]
         self.current_order = 1
+        self.delivered = False
         Truck.id += 1
 
     def can_deliver_order(self, order):
@@ -76,6 +77,13 @@ class Truck:
         self.deliveries.append([self.id, order.id, self.current_order])
         self.current_order += 1
 
+    def deliver(self):
+        self.delivered = True
+        return self.deliveries[::]
+
+    def has_delivered(self):
+        return self.delivered
+
 
 class Order:
     def __init__(self, id, x, y, start_time):
@@ -109,10 +117,11 @@ def clustered(orders, kmeans):
     clusters = {i: np.where(kmeans.labels_ == i)[0] for i in range(kmeans.n_clusters)}
     deliveries = []
 
+    current_truck = Truck()
+
     # loop over each cluster
     for cluster in clusters.values():
         curr_len = len(deliveries)
-        current_truck = Truck()
 
         orders_in_cluster = [orders[idx] for idx in cluster]
 
@@ -120,12 +129,12 @@ def clustered(orders, kmeans):
             if current_truck.can_deliver_order(order):
                 current_truck.deliver_order(order)
             else:
-                deliveries.extend(current_truck.deliveries[::])
+                deliveries.extend(current_truck.deliver())
                 current_truck = Truck()
                 current_truck.deliver_order(order)
 
-        if len(deliveries) - curr_len < len(cluster):
-            deliveries.extend(current_truck.deliveries[::])
+    if not current_truck.has_delivered():
+        deliveries.extend(current_truck.deliver())
 
     return deliveries
 
