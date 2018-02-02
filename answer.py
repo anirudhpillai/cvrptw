@@ -41,12 +41,16 @@ class Truck:
         if self.capacity_left == 0:
             return False
 
-        time_to_reach_order = distance(self.x, self.y, order.x, order.y) / DRIVE_SPEED_KMPH
+        time_to_reach_order = distance(
+            self.x, self.y, order.x, order.y
+        ) / DRIVE_SPEED_KMPH
 
         if self.current_time + time_to_reach_order >= order.end_time:
             return False
 
-        time_to_reach_depot = distance(order.x, order.y, 0, 0) / DRIVE_SPEED_KMPH
+        time_to_reach_depot = distance(
+            order.x, order.y, 0, 0
+        ) / DRIVE_SPEED_KMPH
 
         if (
             max(self.current_time + time_to_reach_order, order.start_time)
@@ -114,7 +118,10 @@ def bruteforce(orders):
 
 
 def clustered(orders, kmeans):
-    clusters = {i: np.where(kmeans.labels_ == i)[0] for i in range(kmeans.n_clusters)}
+    clusters = {
+        i: np.where(kmeans.labels_ == i)[0]
+        for i in range(kmeans.n_clusters)
+    }
     deliveries = []
 
     current_truck = Truck()
