@@ -1,6 +1,13 @@
-# Problem Spec
+# ICHack 18
+We won the Ocado technology challenge by building the most optimal solution
+to the Capacitated Vehicle Routing Problem with Time Windows at the Hackathon.
+Below are the details of the problem.
 
-## Rules
+Our approach is outlined in the Jupyter notebook and the code is in `answer.py`.
+
+## Problem Spec
+
+### Rules
 
 The problem is to minimise the cost of servicing orders with a fleet of trucks.
 
@@ -8,7 +15,7 @@ Trucks can only service 10 orders. Driving takes 1 hour per 20 km. A day lasts 1
 
 Trucks must deliver in the order's time window. Times windows start on the hour and last one hour. Trucks may arrive early and wait until the time window begins before delivering. For simplicity delivery is instant.
 
-## Data
+### Data
 
 Provided data comes in four columns:
 orderi\_id uniquely identifies the order.
@@ -19,16 +26,14 @@ truck\_id - uniquely identify the truck that will make an order
 order\_id - the order\_id from orders.csv the truck should drive to
 sequence\_number - the stage in the trucks journey it should travel to this order (i.e. 1 for the first order, 2 for the second order, etc.)
 
-## Validation
+### Validation
 
 Running the provided script requires python3 with pandas
 
 To validate your solution simply call:
-```
-    python validate.py <filename>
-```
+
+`python validate.py <filename>`
 
 The script assumes orders.csv is in the same directory. If it breaks, ensure that is the case.
 
 An intentionally poorly performing example submission has been provided.    
-
