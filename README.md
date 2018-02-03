@@ -5,6 +5,8 @@ Below are the details of the problem.
 
 Our approach is outlined in the Jupyter notebook and the code is in `answer.py`.
 
+![Visualisation of our solution](vis.png)
+
 ## Problem Spec
 
 ### Rules
